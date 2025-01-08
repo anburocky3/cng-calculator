@@ -36,6 +36,7 @@ export default function Home() {
   const [tollCharges, setTotalCharges] = useState<number>(0);
   const [results, setResults] = useState<Result>();
   const [toggle, setToggle] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchDistricts = async () => {
@@ -67,6 +68,7 @@ export default function Home() {
     const selectedProvider = event.target.value;
 
     if (selectedProvider) {
+      setLoading(true);
       const selectedDistrict = Object.values(groupedDistricts)
         .flatMap((stateDistricts) =>
           stateDistricts.map((district): District | null => {
@@ -86,6 +88,8 @@ export default function Home() {
           if (selectedDistrict.provider === "agp") {
             const { rate } = await response.json();
             setFuelCost(parseInt(rate));
+
+            setLastUpdatedDate("");
           } else {
             const { rate, lastUpdatedTxt } = await response.json();
             setFuelCost(rate);
@@ -95,11 +99,11 @@ export default function Home() {
           }
         } catch (error) {
           console.error("Error fetching CNG cost:", error);
+        } finally {
+          setLoading(false);
         }
       }
     } else {
-      console.log("n selected");
-
       setFuelCost(0);
     }
   };
@@ -268,6 +272,9 @@ export default function Home() {
                       </optgroup>
                     ))}
                   </select>
+                  {loading && (
+                    <div className="text-blue-500 mt-2">Loading...</div>
+                  )}
                 </div>
               ) : (
                 <div className="mb-4">
