@@ -53,6 +53,10 @@ export default function Home() {
           return acc;
         }, {} as GroupedDistricts);
 
+        Object.keys(grouped).forEach((state) => {
+          grouped[state].sort((a, b) => a.district.localeCompare(b.district));
+        });
+
         setGroupedDistricts(grouped);
       } catch (error) {
         console.error("Error fetching districts:", error);
@@ -272,7 +276,8 @@ export default function Home() {
                       <optgroup key={state} label={state}>
                         {groupedDistricts[state].map((district) => (
                           <option key={district.district} value={district.id}>
-                            {district.district}
+                            {district.district} - (
+                            {district.provider.toLowerCase()})
                           </option>
                         ))}
                       </optgroup>
