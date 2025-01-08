@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "state": "Tamil Nadu",
+    "stateCode": "TN",
+    "districtCode": "CH",
+    "district": "Chennai",
+    "provider": "torrent",
+    "station_id": 673
+  },
+  {
+    "id": 2,
+    "state": "Tamil Nadu",
+    "stateCode": "TN",
+    "districtCode": "TRL",
+    "district": "Tiruvallur",
+    "provider": "torrent",
+    "station_id": 891
+  },
+  {
+    "id": 3,
+    "state": "Tamil Nadu",
+    "stateCode": "TN",
+    "districtCode": "NG",
+    "district": "Nagapattinam",
+    "provider": "torrent",
+    "station_id": 858
+  },
+  {
+    "id": 4,
+    "state": "Puducherry",
+    "stateCode": "PY",
+    "districtCode": "KA",
+    "district": "Karaikal",
+    "provider": "torrent",
+    "station_id": 630
+  }
+]
