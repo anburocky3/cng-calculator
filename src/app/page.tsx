@@ -90,9 +90,15 @@ export default function Home() {
             setFuelCost(parseInt(rate));
 
             setLastUpdatedDate("");
-          } else {
+          } else if (selectedDistrict.provider === "torrent") {
             const { rate, lastUpdatedTxt } = await response.json();
-            setFuelCost(rate);
+            setFuelCost(parseInt(rate));
+
+            // Update the last Updated field
+            setLastUpdatedDate(lastUpdatedTxt);
+          } else if (selectedDistrict.provider === "megha") {
+            const { rate, lastUpdatedTxt } = await response.json();
+            setFuelCost(parseInt(rate));
 
             // Update the last Updated field
             setLastUpdatedDate(lastUpdatedTxt);

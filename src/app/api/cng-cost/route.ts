@@ -19,7 +19,7 @@ export async function GET(request: Request) {
 
     const { provider, station_id } = districtData; // Extract provider and station_id
 
-    console.log(provider, station_id);
+    // console.log(provider, station_id);
 
     if (provider === "torrent") {
       const response = await fetchTorrentApi(station_id);
@@ -34,6 +34,15 @@ export async function GET(request: Request) {
       const response = await fetchAGPApi(station_id);
 
       return new Response(JSON.stringify({ rate: response }), {
+        status: 200,
+        headers: {
+          "Content-Type": "text/html",
+        },
+      });
+    } else if (provider === "megha") {
+      const response = await fetchMeghaGas(station_id);
+
+      return new Response(JSON.stringify(response), {
         status: 200,
         headers: {
           "Content-Type": "text/html",
@@ -151,6 +160,65 @@ async function fetchAGPApi(stationId: number | string) {
       .text(); // Get the text content
 
     return rateValue;
+  } catch (error) {
+    console.error("Error fetching AGP API:", error);
+    throw error; // Rethrow the error for further handling if needed
+  }
+}
+
+async function fetchMeghaGas(stationId: number | string) {
+  // Create an HTTPS agent that ignores SSL certificate errors
+  const agent = new https.Agent({
+    rejectUnauthorized: false, // Set to true in production for security
+  });
+
+  try {
+    const response = await axios.get(`https://meghagas.com/check-cng-price`, {
+      headers: {
+        accept:
+          "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+        "accept-language": "en-IN,en;q=0.9,kn;q=0.8,en-GB;q=0.7,ta;q=0.6",
+        "cache-control": "max-age=0",
+        priority: "u=0, i",
+        "sec-ch-ua":
+          '"Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": '"Windows"',
+        "sec-fetch-dest": "document",
+        "sec-fetch-mode": "navigate",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-user": "?1",
+        "upgrade-insecure-requests": "1",
+        cookie:
+          "ci_session=6gej2v05sprivgpcf2hshi1i6hldnfdf; twk_idm_key=USSG2A7nO9WsxM22rNvlk; TawkConnectionTime=0; twk_uuid_62b40e5ab0d10b6f3e78e2b6=%7B%22uuid%22%3A%221.SwvwFB1JCp9HTjbvQNUZCTgoYh8ff9tPwJETeL3MdOFqjuZRWNwi8zO9MRpVKeFT8RzijNXx17Wy2YuYx3UGTsULLZp3ur3RyeeBM8BxqKR2mPxyrP1B8%22%2C%22version%22%3A3%2C%22domain%22%3A%22meghagas.com%22%2C%22ts%22%3A1736373763475%7D",
+        "Referrer-Policy": "strict-origin-when-cross-origin",
+      },
+      httpsAgent: agent, // Use the custom agent
+    });
+
+    // Parse the response data using DOMParser
+    const $ = cheerio.load(response.data);
+
+    const targetTd = $("td:contains('" + stationId + "')");
+
+    const parentTr = targetTd.closest("tr");
+
+    if (parentTr.length > 0) {
+      // Extract the values from the appropriate <td> elements
+      const rate = parentTr
+        .find("td")
+        .eq(3)
+        .text()
+        .trim()
+        .replace("₹", "")
+        .trim(); // 82.00
+      const lastUpdatedTxt = parentTr.find("td").eq(6).text().trim(); // 18.10.2023
+
+      // Return or use the extracted values as needed
+      return { rate, lastUpdatedTxt };
+    }
+
+    return { rateValue: null, updatedTxt: "" };
   } catch (error) {
     console.error("Error fetching AGP API:", error);
     throw error; // Rethrow the error for further handling if needed

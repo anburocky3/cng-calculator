@@ -70,5 +70,41 @@
     "district": "Vellore",
     "provider": "agp",
     "station_id": "vellore"
+  },
+  {
+    "id": 9,
+    "state": "Tamil Nadu",
+    "stateCode": "TN",
+    "districtCode": "PER",
+    "district": "Perambalur - Ariyalur",
+    "provider": "megha",
+    "station_id": "Perambalur-Ariyalur GA"
+  },
+  {
+    "id": 10,
+    "state": "Tamil Nadu",
+    "stateCode": "TN",
+    "districtCode": "DIN",
+    "district": "Dindigul",
+    "provider": "megha",
+    "station_id": "Dindigul GA"
+  },
+  {
+    "id": 11,
+    "state": "Tamil Nadu",
+    "stateCode": "TN",
+    "districtCode": "THAN",
+    "district": "Thanjavur",
+    "provider": "megha",
+    "station_id": "Thanjavur GA"
+  },
+  {
+    "id": 12,
+    "state": "Tamil Nadu",
+    "stateCode": "TN",
+    "districtCode": "TIRU",
+    "district": "Tiruvannamalai",
+    "provider": "megha",
+    "station_id": "Tiruvannamalai GA"
   }
 ]
