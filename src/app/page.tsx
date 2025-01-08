@@ -82,19 +82,13 @@ export default function Home() {
               JSON.stringify(selectedDistrict)
             )}`
           );
-          const text = await response.text();
-          const parser = new DOMParser();
-          const doc = parser.parseFromString(text, "text/html");
-          const priceElements = doc.querySelectorAll(".priceTxt");
 
-          if (priceElements) {
-            const priceText = priceElements[0].textContent || "";
-            const lastUpdatedTxt = priceElements[1].textContent || "";
-
-            const priceValue = parseFloat(
-              priceText.replace("Rs. ", "").replace(",", "")
-            );
-            setFuelCost(priceValue);
+          if (selectedDistrict.provider === "agp") {
+            const { rate } = await response.json();
+            setFuelCost(parseInt(rate));
+          } else {
+            const { rate, lastUpdatedTxt } = await response.json();
+            setFuelCost(rate);
 
             // Update the last Updated field
             setLastUpdatedDate(lastUpdatedTxt);

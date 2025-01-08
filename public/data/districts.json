@@ -34,5 +34,41 @@
     "district": "Karaikal",
     "provider": "torrent",
     "station_id": 630
+  },
+  {
+    "id": 5,
+    "state": "Tamil Nadu",
+    "stateCode": "TN",
+    "districtCode": "CHP",
+    "district": "Chengalpattu",
+    "provider": "agp",
+    "station_id": "chengalpattu"
+  },
+  {
+    "id": 6,
+    "state": "Tamil Nadu",
+    "stateCode": "TN",
+    "districtCode": "KANCHI",
+    "district": "Kancheepuram",
+    "provider": "agp",
+    "station_id": "kancheepuram"
+  },
+  {
+    "id": 7,
+    "state": "Tamil Nadu",
+    "stateCode": "TN",
+    "districtCode": "RAM",
+    "district": "Ramanathapuram",
+    "provider": "agp",
+    "station_id": "ramanathapuram"
+  },
+  {
+    "id": 8,
+    "state": "Tamil Nadu",
+    "stateCode": "TN",
+    "districtCode": "VEL",
+    "district": "Vellore",
+    "provider": "agp",
+    "station_id": "vellore"
   }
 ]
