@@ -38,3 +38,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 **Anbuselvan Annamalai**  
 [Facebook](https://facebook.com/anburocky3)  
 [LinkedIn](https://linkedin.com/in/anburocky3)
+
+## Supported platforms
+
+1. TorrentGas
+2. AGP Gas
+3. Megha Gas
