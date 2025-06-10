@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { FaGithub } from "react-icons/fa";
 import Head from "next/head";
 import { FaGasPump, FaLocationDot, FaRoad } from "react-icons/fa6";
+import Link from "next/link";
 
 interface District {
   id: number;
@@ -181,7 +182,7 @@ export default function Home() {
         />
         {/* <meta property="og:image" content="/path/to/image.jpg" />{" "} */}
         {/* Replace with your image path */}
-        <meta property="og:url" content="https://cng-calc.vercel.app" />
+        <meta property="og:url" content="https://smart-cng.vercel.app/" />
       </Head>
       <div className="min-h-screen bg-gradient-to-r from-blue-500 to-purple-500 p-3 sm:p-20 pb-20">
         <main className="max-w-3xl mx-auto">
@@ -361,7 +362,6 @@ export default function Home() {
               </button>
             </div>
           </form>
-
           {results && (
             <div className="bg-white shadow-md rounded  mb-4">
               <h3 className="sm:text-xl font-semibold text-green-500 flex flex-col sm:flex-row items-start sm:items-center px-8 pt-8">
@@ -412,15 +412,25 @@ export default function Home() {
               ))} */}
             </div>
           )}
-          <a
-            href="https://github.com/anburocky3/cng-calculator/fork" // Replace with your GitHub URL
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center text-white hover:text-gray-200 justify-center text-sm"
-          >
-            <FaGithub className="w-4 h-4 mr-2" /> {/* GitHub icon */}
-            Open Source project
-          </a>
+          <div className="flex items-center justify-center space-x-4 text-sm">
+            <a
+              href="https://github.com/anburocky3/cng-calculator/fork" // Replace with your GitHub URL
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center text-white hover:text-gray-200 justify-center "
+            >
+              <FaGithub className="w-4 h-4 mr-2" /> {/* GitHub icon */}
+              Open Source project
+            </a>{" "}
+            <span className="text-gray-300">|</span>
+            <Link
+              href="/when-to-gas"
+              className="flex items-center text-white hover:text-gray-200 justify-center "
+            >
+              <FaGasPump className="w-4 h-4 mr-2" />
+              When to Gas
+            </Link>
+          </div>
         </main>
       </div>
     </>
