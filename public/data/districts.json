@@ -75,10 +75,10 @@
     "id": 9,
     "state": "Tamil Nadu",
     "stateCode": "TN",
-    "districtCode": "PER",
-    "district": "Perambalur - Ariyalur",
+    "districtCode": "ARI",
+    "district": "Ariyalur",
     "provider": "megha",
-    "station_id": "Perambalur-Ariyalur GA"
+    "station_id": 21
   },
   {
     "id": 10,
@@ -87,24 +87,78 @@
     "districtCode": "DIN",
     "district": "Dindigul",
     "provider": "megha",
-    "station_id": "Dindigul GA"
+    "station_id": 46
   },
   {
     "id": 11,
     "state": "Tamil Nadu",
     "stateCode": "TN",
-    "districtCode": "THAN",
-    "district": "Thanjavur",
+    "districtCode": "KAL",
+    "district": "Kallakurichi",
     "provider": "megha",
-    "station_id": "Thanjavur GA"
+    "station_id": 50
   },
   {
     "id": 12,
     "state": "Tamil Nadu",
     "stateCode": "TN",
+    "districtCode": "KAR",
+    "district": "Karur",
+    "provider": "megha",
+    "station_id": 53
+  },
+  {
+    "id": 13,
+    "state": "Tamil Nadu",
+    "stateCode": "TN",
+    "districtCode": "PAD",
+    "district": "Padukkottai",
+    "provider": "megha",
+    "station_id": 47
+  },
+  {
+    "id": 14,
+    "state": "Tamil Nadu",
+    "stateCode": "TN",
+    "districtCode": "PER",
+    "district": "Perambalur",
+    "provider": "megha",
+    "station_id": 22
+  },
+  {
+    "id": 15,
+    "state": "Tamil Nadu",
+    "stateCode": "TN",
+    "districtCode": "SIV",
+    "district": "Sivaganga",
+    "provider": "megha",
+    "station_id": 51
+  },
+  {
+    "id": 16,
+    "state": "Tamil Nadu",
+    "stateCode": "TN",
+    "districtCode": "THAN",
+    "district": "Thanjavur",
+    "provider": "megha",
+    "station_id": 52
+  },
+  {
+    "id": 17,
+    "state": "Tamil Nadu",
+    "stateCode": "TN",
     "districtCode": "TIRU",
     "district": "Tiruvannamalai",
     "provider": "megha",
-    "station_id": "Tiruvannamalai GA"
+    "station_id": 48
+  },
+  {
+    "id": 18,
+    "state": "Tamil Nadu",
+    "stateCode": "TN",
+    "districtCode": "VIL",
+    "district": "Villupuram",
+    "provider": "megha",
+    "station_id": 49
   }
 ]

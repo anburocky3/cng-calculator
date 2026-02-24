@@ -10,7 +10,7 @@ export async function GET(request: Request) {
   if (!providerData) {
     return NextResponse.json(
       { error: "Provider ID is required" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -91,7 +91,7 @@ async function fetchTorrentApi(stationId: number | string) {
           "Referrer-Policy": "strict-origin-when-cross-origin",
         },
         httpsAgent: agent, // Use the custom agent
-      }
+      },
     );
 
     // Parse the response data using Cheerio
@@ -101,11 +101,16 @@ async function fetchTorrentApi(stationId: number | string) {
     const priceElements = $(".priceTxt");
 
     if (priceElements.length > 0) {
-      const priceText = priceElements.first().text().trim(); // Get the first price text
+      let priceText = priceElements.first().text().trim(); // Get the first price text
+
+      // if there are multiple price elements, get the second one for last updated text
+
       const lastUpdatedTxt =
         priceElements.length > 1 ? priceElements.eq(1).text().trim() : ""; // Get the second price text if available
 
-      const rate = parseFloat(priceText.replace("Rs. ", "").replace(",", ""));
+      const rupeeMatch = priceText.match(/Rs\.?\s*([\d,]+(?:\.\d+)?)/i);
+      const numericText = rupeeMatch?.[1] ?? "";
+      const rate = parseFloat(numericText.replace(/,/g, ""));
 
       // Return or use the rate and lastUpdatedTxt as needed
       return { rate, lastUpdatedTxt };
@@ -126,7 +131,7 @@ async function fetchAGPApi(stationId: number | string) {
 
   try {
     const response = await axios.get(
-      `https://www.agppratham.com/cng/stations-locator/tamil-nadu/${stationId}`,
+      `https://www.think-gas.com/cng/stations-locator/tamil-nadu/${stationId}`,
       {
         headers: {
           accept:
@@ -143,11 +148,11 @@ async function fetchAGPApi(stationId: number | string) {
           "upgrade-insecure-requests": "1",
           cookie:
             "_d8=afe3308afcc1f6709e128d9a617f8275; _d9=90a17762635af41f0db405b91fb6f324; XSRF-TOKEN=eyJpdiI6IjJGL25OWWJKUFlLTnJ5MUN5cjd0SWc9PSIsInZhbHVlIjoiNmdncGc0c1Q0K010aGE0VmdvMGJKTGNwV2xjTS9ScVgzbkFXRWlxbTJ3T21MaWFteHZlVkRoblBKQzhjbDZDVEpiUGJqeEl1SmZVU3YrU092SGw4YzRhZE80bElpR09kM0Vvck0zVmtiUkt3RjdMTzJCYzQrRGU4UGN3MkRpRFkiLCJtYWMiOiI3YjUzYjJjYTk1MTQ3MWRiODFkYjg1MmQwMTMyYTVkYzcwYjMyNjQyN2VlNzRkMDNkMWYzZDJlMDNmZjM3MWNiIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IkRmTU5YeEtYRWhISzhwNVFjMG4vMXc9PSIsInZhbHVlIjoiL2ZCRnpGS2ttUmdiWGYydFBhSUFFV1hSa1Z3NFBSQm5pWUkwUkduZW5Dc1p2UjRjY1d3T3p3eGt1anBROHNhQ3NKMElaK3lMNjlvbWpXRk1rVGJYc20wSlQ1TkxYejJ6aEluTkNWd2R1YjRqRk1lT3l4QUJZNDNnVUM5dFlrTnUiLCJtYWMiOiIyMmQzYTEyNTQ3ZDQ5Mjk2MDE2Njc5YmNiZDU5ZjU4MGRmODFkODk0ODg3OTMwYmM2YjM2MmRlY2NkMjY0ZWM2IiwidGFnIjoiIn0%3D",
-          Referer: `https://www.agppratham.com/cng/stations-locator/tamil-nadu/${stationId}`,
+          Referer: `https://www.think-gas.com/cng/stations-locator/tamil-nadu/${stationId}`,
           "Referrer-Policy": "strict-origin-when-cross-origin",
         },
         httpsAgent: agent, // Use the custom agent
-      }
+      },
     );
 
     // Parse the response data using DOMParser
@@ -166,6 +171,66 @@ async function fetchAGPApi(stationId: number | string) {
   }
 }
 
+// Old Megha access mode
+// async function fetchMeghaGas(stationId: number | string) {
+//   // Create an HTTPS agent that ignores SSL certificate errors
+//   const agent = new https.Agent({
+//     rejectUnauthorized: false, // Set to true in production for security
+//   });
+
+//   try {
+//     const response = await axios.get(`https://meghagas.com/check-cng-price`, {
+//       headers: {
+//         accept:
+//           "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+//         "accept-language": "en-IN,en;q=0.9,kn;q=0.8,en-GB;q=0.7,ta;q=0.6",
+//         "cache-control": "max-age=0",
+//         priority: "u=0, i",
+//         "sec-ch-ua":
+//           '"Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
+//         "sec-ch-ua-mobile": "?0",
+//         "sec-ch-ua-platform": '"Windows"',
+//         "sec-fetch-dest": "document",
+//         "sec-fetch-mode": "navigate",
+//         "sec-fetch-site": "same-origin",
+//         "sec-fetch-user": "?1",
+//         "upgrade-insecure-requests": "1",
+//         cookie:
+//           "ci_session=6gej2v05sprivgpcf2hshi1i6hldnfdf; twk_idm_key=USSG2A7nO9WsxM22rNvlk; TawkConnectionTime=0; twk_uuid_62b40e5ab0d10b6f3e78e2b6=%7B%22uuid%22%3A%221.SwvwFB1JCp9HTjbvQNUZCTgoYh8ff9tPwJETeL3MdOFqjuZRWNwi8zO9MRpVKeFT8RzijNXx17Wy2YuYx3UGTsULLZp3ur3RyeeBM8BxqKR2mPxyrP1B8%22%2C%22version%22%3A3%2C%22domain%22%3A%22meghagas.com%22%2C%22ts%22%3A1736373763475%7D",
+//         "Referrer-Policy": "strict-origin-when-cross-origin",
+//       },
+//       httpsAgent: agent, // Use the custom agent
+//     });
+
+//     // Parse the response data using DOMParser
+//     const $ = cheerio.load(response.data);
+
+//     const targetTd = $("td:contains('" + stationId + "')");
+
+//     const parentTr = targetTd.closest("tr");
+
+//     if (parentTr.length > 0) {
+//       // Extract the values from the appropriate <td> elements
+//       const rate = parentTr
+//         .find("td")
+//         .eq(3)
+//         .text()
+//         .trim()
+//         .replace("₹", "")
+//         .trim(); // 82.00
+//       const lastUpdatedTxt = parentTr.find("td").eq(6).text().trim(); // 18.10.2023
+
+//       // Return or use the extracted values as needed
+//       return { rate, lastUpdatedTxt };
+//     }
+
+//     return { rateValue: null, updatedTxt: "" };
+//   } catch (error) {
+//     console.error("Error fetching AGP API:", error);
+//     throw error; // Rethrow the error for further handling if needed
+//   }
+// }
+
 async function fetchMeghaGas(stationId: number | string) {
   // Create an HTTPS agent that ignores SSL certificate errors
   const agent = new https.Agent({
@@ -173,54 +238,55 @@ async function fetchMeghaGas(stationId: number | string) {
   });
 
   try {
-    const response = await axios.get(`https://meghagas.com/check-cng-price`, {
-      headers: {
-        accept:
-          "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
-        "accept-language": "en-IN,en;q=0.9,kn;q=0.8,en-GB;q=0.7,ta;q=0.6",
-        "cache-control": "max-age=0",
-        priority: "u=0, i",
-        "sec-ch-ua":
-          '"Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
-        "sec-ch-ua-mobile": "?0",
-        "sec-ch-ua-platform": '"Windows"',
-        "sec-fetch-dest": "document",
-        "sec-fetch-mode": "navigate",
-        "sec-fetch-site": "same-origin",
-        "sec-fetch-user": "?1",
-        "upgrade-insecure-requests": "1",
-        cookie:
-          "ci_session=6gej2v05sprivgpcf2hshi1i6hldnfdf; twk_idm_key=USSG2A7nO9WsxM22rNvlk; TawkConnectionTime=0; twk_uuid_62b40e5ab0d10b6f3e78e2b6=%7B%22uuid%22%3A%221.SwvwFB1JCp9HTjbvQNUZCTgoYh8ff9tPwJETeL3MdOFqjuZRWNwi8zO9MRpVKeFT8RzijNXx17Wy2YuYx3UGTsULLZp3ur3RyeeBM8BxqKR2mPxyrP1B8%22%2C%22version%22%3A3%2C%22domain%22%3A%22meghagas.com%22%2C%22ts%22%3A1736373763475%7D",
-        "Referrer-Policy": "strict-origin-when-cross-origin",
+    const body = new URLSearchParams({
+      district: String(stationId),
+    }).toString();
+
+    const response = await axios.post(
+      `https://consumer.meghagas.com/CheckPrice/getCngPrice`,
+      body,
+      {
+        headers: {
+          accept: "*/*",
+          "accept-language": "en-IN,en-GB;q=0.9,en-US;q=0.8,en;q=0.7",
+          "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+          priority: "u=1, i",
+          "sec-ch-ua":
+            '"Not:A-Brand";v="99", "Google Chrome";v="145", "Chromium";v="145"',
+          "sec-ch-ua-mobile": "?0",
+          "sec-ch-ua-platform": '"Windows"',
+          "sec-fetch-dest": "empty",
+          "sec-fetch-mode": "cors",
+          "sec-fetch-site": "same-origin",
+          "x-requested-with": "XMLHttpRequest",
+          Referer: "https://consumer.meghagas.com/checkPrice/cng",
+        },
+        httpsAgent: agent, // Use the custom agent
       },
-      httpsAgent: agent, // Use the custom agent
-    });
+    );
 
     // Parse the response data using DOMParser
     const $ = cheerio.load(response.data);
 
-    const targetTd = $("td:contains('" + stationId + "')");
+    const priceText = $(".cng-png-price-block .fs-2").first().text().trim();
+    const effectiveText = $(".cng-png-price-block > small")
+      .first()
+      .text()
+      .trim();
 
-    const parentTr = targetTd.closest("tr");
+    const rate = parseFloat(
+      priceText.replace("₹", "").replace(/,/g, "").trim(),
+    );
+    const dateMatch = effectiveText.match(/(\d{2}\.\d{2}\.\d{4})/);
+    const lastUpdatedTxt = dateMatch?.[1] ?? "";
 
-    if (parentTr.length > 0) {
-      // Extract the values from the appropriate <td> elements
-      const rate = parentTr
-        .find("td")
-        .eq(3)
-        .text()
-        .trim()
-        .replace("₹", "")
-        .trim(); // 82.00
-      const lastUpdatedTxt = parentTr.find("td").eq(6).text().trim(); // 18.10.2023
-
-      // Return or use the extracted values as needed
+    if (!Number.isNaN(rate)) {
       return { rate, lastUpdatedTxt };
     }
 
-    return { rateValue: null, updatedTxt: "" };
+    return { rate: null, lastUpdatedTxt: "" };
   } catch (error) {
-    console.error("Error fetching AGP API:", error);
+    console.error("Error fetching Megha API:", error);
     throw error; // Rethrow the error for further handling if needed
   }
 }

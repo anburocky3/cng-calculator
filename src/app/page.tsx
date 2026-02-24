@@ -12,8 +12,8 @@ interface District {
   stateCode: string;
   districtCode: string;
   district: string;
-  provider: "torrent" | "agp";
-  station_id: number;
+  provider: "torrent" | "agp" | "megha";
+  station_id: number | string;
 }
 
 interface Result {
@@ -30,7 +30,7 @@ export default function Home() {
   const [fuelCost, setFuelCost] = useState<number>(92);
   const [lastUpdatedDate, setLastUpdatedDate] = useState<string>("");
   const [groupedDistricts, setGroupedDistricts] = useState<GroupedDistricts>(
-    {}
+    {},
   );
   const [distance, setDistance] = useState<number>(100);
   const [efficiency, setEfficiency] = useState<number>(20);
@@ -38,6 +38,24 @@ export default function Home() {
   const [results, setResults] = useState<Result>();
   const [toggle, setToggle] = useState(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [selectedDistrictId, setSelectedDistrictId] = useState<number | null>(
+    null,
+  );
+  const [usedFallbackCost, setUsedFallbackCost] = useState<boolean>(false);
+
+  const resolveFuelCost = (value: unknown) => {
+    if (value === null || value === undefined || value === "") {
+      return { value: 93, isFallback: true };
+    }
+
+    const parsedValue =
+      typeof value === "number" ? value : parseFloat(String(value));
+    if (!Number.isFinite(parsedValue)) {
+      return { value: 93, isFallback: true };
+    }
+
+    return { value: parsedValue, isFallback: false };
+  };
 
   useEffect(() => {
     const fetchDistricts = async () => {
@@ -67,18 +85,15 @@ export default function Home() {
     fetchDistricts();
   }, []);
 
-  const handleDistrictChange = async (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    const selectedProvider = event.target.value;
-
-    if (selectedProvider) {
+  const handleDistrictChange = async (districtId: number | null) => {
+    if (districtId) {
       setLoading(true);
+      setSelectedDistrictId(districtId);
       const selectedDistrict = Object.values(groupedDistricts)
         .flatMap((stateDistricts) =>
           stateDistricts.map((district): District | null => {
-            return district.id === Number(selectedProvider) ? district : null;
-          })
+            return district.id === districtId ? district : null;
+          }),
         )
         .find((district) => district !== null);
 
@@ -86,24 +101,30 @@ export default function Home() {
         try {
           const response = await fetch(
             `/api/cng-cost?provider=${encodeURIComponent(
-              JSON.stringify(selectedDistrict)
-            )}`
+              JSON.stringify(selectedDistrict),
+            )}`,
           );
 
           if (selectedDistrict.provider === "agp") {
             const { rate } = await response.json();
-            setFuelCost(parseInt(rate));
+            const resolvedRate = resolveFuelCost(rate);
+            setFuelCost(resolvedRate.value);
+            setUsedFallbackCost(resolvedRate.isFallback);
 
             setLastUpdatedDate("");
           } else if (selectedDistrict.provider === "torrent") {
             const { rate, lastUpdatedTxt } = await response.json();
-            setFuelCost(parseInt(rate));
+            const resolvedRate = resolveFuelCost(rate);
+            setFuelCost(resolvedRate.value);
+            setUsedFallbackCost(resolvedRate.isFallback);
 
             // Update the last Updated field
             setLastUpdatedDate(lastUpdatedTxt);
           } else if (selectedDistrict.provider === "megha") {
             const { rate, lastUpdatedTxt } = await response.json();
-            setFuelCost(parseInt(rate));
+            const resolvedRate = resolveFuelCost(rate);
+            setFuelCost(resolvedRate.value);
+            setUsedFallbackCost(resolvedRate.isFallback);
 
             // Update the last Updated field
             setLastUpdatedDate(lastUpdatedTxt);
@@ -115,8 +136,18 @@ export default function Home() {
         }
       }
     } else {
+      setSelectedDistrictId(null);
       setFuelCost(0);
+      setLastUpdatedDate("");
+      setUsedFallbackCost(false);
     }
+  };
+
+  const handleDistrictSelectChange = (
+    event: React.ChangeEvent<HTMLSelectElement>,
+  ) => {
+    const districtId = event.target.value ? Number(event.target.value) : null;
+    handleDistrictChange(districtId);
   };
 
   const calculateFuelCost = () => {
@@ -161,8 +192,9 @@ export default function Home() {
 
   const changeFuelCost = (event: React.ChangeEvent<HTMLInputElement>) => {
     // event
-    const fuelCost = parseInt(event.target.value);
-    setFuelCost(fuelCost);
+    const fuelCost = resolveFuelCost(event.target.value);
+    setFuelCost(fuelCost.value);
+    setUsedFallbackCost(false);
   };
 
   return (
@@ -184,9 +216,9 @@ export default function Home() {
         {/* Replace with your image path */}
         <meta property="og:url" content="https://smart-cng.vercel.app/" />
       </Head>
-      <div className="min-h-screen bg-gradient-to-r from-blue-500 to-purple-500 p-3 sm:p-20 pb-20">
+      <div className="min-h-screen bg-linear-to-r from-blue-500 to-purple-500 p-3 sm:p-20 pb-20">
         <main className="max-w-3xl mx-auto">
-          <h2 className="text-2xl sm:text-4xl font-semibold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-white to-green-400 text-center p-3 sm:p-0">
+          <h2 className="text-2xl sm:text-4xl font-semibold mb-4 text-transparent bg-clip-text bg-linear-to-r from-white to-green-400 text-center p-3 sm:p-0">
             Smart CNG Calculator
           </h2>
           <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
@@ -211,6 +243,9 @@ export default function Home() {
                         className="sr-only"
                         onChange={(e) => {
                           setFuelCost(0);
+                          setSelectedDistrictId(null);
+                          setLastUpdatedDate("");
+                          setUsedFallbackCost(false);
                           setToggle(e.target.checked);
                         }}
                       />
@@ -268,15 +303,18 @@ export default function Home() {
                   </label>
                   <select
                     id="district"
-                    className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight 
-                focus:outline-none focus:shadow-outline"
-                    onChange={handleDistrictChange}
+                    value={selectedDistrictId ?? ""}
+                    className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    onChange={handleDistrictSelectChange}
                   >
                     <option value="">Select a district</option>
                     {Object.keys(groupedDistricts).map((state) => (
                       <optgroup key={state} label={state}>
                         {groupedDistricts[state].map((district) => (
-                          <option key={district.district} value={district.id}>
+                          <option
+                            key={`${state}-${district.id}`}
+                            value={district.id}
+                          >
                             {district.district} - (
                             {district.provider.toLowerCase()})
                           </option>
@@ -331,11 +369,21 @@ export default function Home() {
             {fuelCost && toggle ? (
               <div className="mb-4 flex items-center justify-between">
                 <span className="text-gray-700 text-sm font-bold">
-                  Rs. {fuelCost.toFixed(2)}
+                  Rs. {fuelCost.toFixed(2)}{" "}
+                  <span className="text-gray-600 font-medium text-xs">
+                    / kg
+                  </span>
+                  {usedFallbackCost && (
+                    <span className="bg-amber-100 text-amber-800 px-2 py-1 text-xs rounded ml-2 font-normal">
+                      (Realtime fuel cost not available, show average fuel
+                      cost.)
+                    </span>
+                  )}
                 </span>
                 {lastUpdatedDate && (
                   <span className="bg-purple-400 px-2 py-1 text-xs rounded">
-                    Last Updated: {lastUpdatedDate}
+                    <span className="font-medium">Last Updated:</span>{" "}
+                    {lastUpdatedDate}
                   </span>
                 )}
               </div>
@@ -369,7 +417,7 @@ export default function Home() {
                   <FaGasPump className="w-6 mr-2" />
                   <span className="mr-2"> Rs. {results.totalCost}</span>
                 </div>
-                <span className="!text-gray-500">
+                <span className="text-gray-500!">
                   is needed for {results.fuelRequired} KG of CNG
                   {results.tollCharges && results.tollCharges !== "0" && (
                     <span>, with toll charges</span>

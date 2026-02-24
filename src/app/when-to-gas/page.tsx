@@ -231,7 +231,7 @@ export default function WhenToGas() {
     const fullTankRange = MAX_CNG_POINTS * kmPerPoint;
     const nextBunks = bunk
       .filter(
-        (b) => b.distance > currentBunk.distance && b.distance <= fullTankRange
+        (b) => b.distance > currentBunk.distance && b.distance <= fullTankRange,
       )
       .sort((a, b) => a.distance - b.distance);
 
@@ -285,11 +285,11 @@ export default function WhenToGas() {
           content="https://smart-cng.vercel.app/when-to-gas"
         />
       </Head>
-      <div className="min-h-screen bg-gradient-to-r from-blue-500 to-purple-500 p-2 sm:p-4 md:p-6 lg:p-8 xl:p-20 pb-20">
+      <div className="min-h-screen bg-linear-to-r from-blue-500 to-purple-500 p-2 sm:p-4 md:p-6 lg:p-8 xl:p-20 pb-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 max-w-7xl mx-auto">
           {/* Distance coverage */}
           <div className="w-full">
-            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-semibold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-white to-green-400 text-center p-2 sm:p-0">
+            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-semibold mb-4 text-transparent bg-clip-text bg-linear-to-r from-white to-green-400 text-center p-2 sm:p-0">
               When to Gas?
             </h2>
             <div className="bg-white shadow-md rounded-lg overflow-hidden">
@@ -381,7 +381,7 @@ export default function WhenToGas() {
                           </td>
                           <td
                             className={`px-2 sm:px-4 py-2 text-sm sm:text-base ${getStatusColor(
-                              status
+                              status,
                             )}`}
                           >
                             {status}
@@ -426,7 +426,7 @@ export default function WhenToGas() {
           </div>
           {/* Bunk Status */}
           <div className="w-full">
-            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-semibold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-white to-green-400 text-center p-2 sm:p-0">
+            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-semibold mb-4 text-transparent bg-clip-text bg-linear-to-r from-white to-green-400 text-center p-2 sm:p-0">
               Bunk Status
             </h2>
             <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
