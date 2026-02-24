@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { FaGithub } from "react-icons/fa";
+import { FaGithub, FaSearch } from "react-icons/fa";
 import Head from "next/head";
 import { FaGasPump, FaLocationDot, FaRoad } from "react-icons/fa6";
 import Link from "next/link";
@@ -482,6 +482,14 @@ export default function Home() {
             >
               <FaGasPump className="w-4 h-4 mr-2" />
               When to Gas
+            </Link>
+            <span className="text-gray-300">|</span>
+            <Link
+              href="/rto-search"
+              className="flex items-center text-white hover:text-gray-200 justify-center bg-white/10 px-3 py-1.5 rounded-full border border-white/20"
+            >
+              <FaSearch className="w-4 h-4 mr-2" />
+              RTO Search
             </Link>
           </div>
         </main>
