@@ -216,16 +216,16 @@ export default function Home() {
         {/* Replace with your image path */}
         <meta property="og:url" content="https://smart-cng.vercel.app/" />
       </Head>
-      <div className="min-h-screen bg-linear-to-r from-blue-500 to-purple-500 p-3 sm:p-20 pb-20">
+      <div className="min-h-screen bg-linear-to-br from-blue-500 via-indigo-500 to-purple-500 px-3 py-5 sm:px-6 sm:py-10 lg:px-8 lg:py-16">
         <main className="max-w-3xl mx-auto">
-          <h2 className="text-2xl sm:text-4xl font-semibold mb-4 text-transparent bg-clip-text bg-linear-to-r from-white to-green-400 text-center p-3 sm:p-0">
+          <h2 className="text-2xl sm:text-4xl font-bold mb-5 text-transparent bg-clip-text bg-linear-to-r from-white to-green-300 text-center">
             Smart CNG Calculator
           </h2>
-          <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-            <div className="mb-4 flex-1">
+          <form className="bg-white/95 backdrop-blur-sm shadow-xl rounded-2xl p-4 sm:p-6 lg:p-8 mb-5 border border-white/40">
+            <div className="mb-5 flex-1">
               <div className="flex items-center justify-between">
                 <label
-                  className="block text-gray-700 text-sm font-bold mb-2"
+                  className="block text-gray-700 text-sm font-semibold mb-2"
                   htmlFor="distance"
                 >
                   Distance (in km)
@@ -271,13 +271,13 @@ export default function Home() {
                 id="distance"
                 value={distance}
                 onChange={(e) => setDistance(Number(e.target.value))}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="w-full rounded-xl border border-gray-200 bg-white px-3 py-3 text-gray-800 shadow-sm focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
                 placeholder="Enter distance"
               />
             </div>
-            <div className="mb-4">
+            <div className="mb-5">
               <label
-                className="block text-gray-700 text-sm font-bold mb-2"
+                className="block text-gray-700 text-sm font-semibold mb-2"
                 htmlFor="efficiency"
               >
                 Efficiency (km/kg)
@@ -287,16 +287,16 @@ export default function Home() {
                 id="efficiency"
                 value={efficiency}
                 onChange={(e) => setEfficiency(Number(e.target.value))}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="w-full rounded-xl border border-gray-200 bg-white px-3 py-3 text-gray-800 shadow-sm focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
                 placeholder="Enter efficiency"
               />
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
               {toggle ? (
-                <div className="mb-4">
+                <div className="mb-2 sm:mb-0">
                   <label
-                    className="block text-gray-700 text-sm font-bold mb-2"
+                    className="block text-gray-700 text-sm font-semibold mb-2"
                     htmlFor="district"
                   >
                     Select District
@@ -304,7 +304,7 @@ export default function Home() {
                   <select
                     id="district"
                     value={selectedDistrictId ?? ""}
-                    className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    className="w-full rounded-xl border border-gray-200 bg-white px-3 py-3 text-gray-800 shadow-sm focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
                     onChange={handleDistrictSelectChange}
                   >
                     <option value="">Select a district</option>
@@ -323,13 +323,15 @@ export default function Home() {
                     ))}
                   </select>
                   {loading && (
-                    <div className="text-blue-500 mt-2">Loading...</div>
+                    <div className="text-blue-600 mt-2 text-sm font-medium">
+                      Loading district fuel cost...
+                    </div>
                   )}
                 </div>
               ) : (
-                <div className="mb-4">
+                <div className="mb-2 sm:mb-0">
                   <label
-                    className="block text-gray-700 text-sm font-bold mb-2"
+                    className="block text-gray-700 text-sm font-semibold mb-2"
                     htmlFor="fuelCost"
                   >
                     Fuel Cost (per kg)
@@ -340,18 +342,18 @@ export default function Home() {
                     min={0}
                     value={fuelCost}
                     onChange={(e) => setFuelCost(Number(e.target.value))}
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    className="w-full rounded-xl border border-gray-200 bg-white px-3 py-3 text-gray-800 shadow-sm focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
                     placeholder="Enter fuel cost"
                   />
                 </div>
               )}
 
-              <div className="mb-4">
+              <div className="mb-2 sm:mb-0">
                 <label
                   className="block text-gray-700 text-sm mb-2"
                   htmlFor="tollCharges"
                 >
-                  <span className=" font-bold ">Toll Charges</span>
+                  <span className="font-semibold">Toll Charges</span>
                   <span className="text-gray-300 ml-2">(Optional)</span>
                 </label>
                 <input
@@ -360,64 +362,67 @@ export default function Home() {
                   value={tollCharges}
                   min={0}
                   onChange={(e) => setTotalCharges(Number(e.target.value))}
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  className="w-full rounded-xl border border-gray-200 bg-white px-3 py-3 text-gray-800 shadow-sm focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
                   placeholder="Enter Toll Charge charges"
                 />
               </div>
             </div>
 
             {fuelCost && toggle ? (
-              <div className="mb-4 flex items-center justify-between">
-                <span className="text-gray-700 text-sm font-bold">
+              <div className="mt-4 mb-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 rounded-xl bg-blue-50 px-3 py-3 border border-blue-100">
+                <span className="text-gray-800 text-base font-semibold">
                   Rs. {fuelCost.toFixed(2)}{" "}
                   <span className="text-gray-600 font-medium text-xs">
                     / kg
                   </span>
                   {usedFallbackCost && (
-                    <span className="bg-amber-100 text-amber-800 px-2 py-1 text-xs rounded ml-2 font-normal">
+                    <span className="inline-block bg-amber-100 text-amber-800 px-2 py-1 text-xs rounded ml-2 font-normal mt-1 sm:mt-0">
                       (Realtime fuel cost not available, show average fuel
                       cost.)
                     </span>
                   )}
                 </span>
                 {lastUpdatedDate && (
-                  <span className="bg-purple-400 px-2 py-1 text-xs rounded">
+                  <span className="bg-purple-100 text-purple-800 px-2.5 py-1.5 text-xs rounded-lg border border-purple-200">
                     <span className="font-medium">Last Updated:</span>{" "}
                     {lastUpdatedDate}
                   </span>
                 )}
               </div>
             ) : (
-              <div className="mb-4">
+              <div className="mt-4 mb-5 rounded-xl bg-blue-50 px-3 py-3 border border-blue-100">
                 <input
                   type="range"
                   id="fuelCost"
                   min="50"
                   max="150"
                   value={fuelCost}
-                  className="w-full"
+                  className="w-full accent-blue-600"
                   onChange={changeFuelCost}
                 />
+                <div className="text-xs text-gray-500 mt-1">
+                  Fuel Cost: Rs. {fuelCost.toFixed(2)} / kg
+                </div>
               </div>
             )}
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between mt-1">
               <button
                 type="button"
                 onClick={calculateFuelCost}
-                className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-200"
               >
                 Calculate
               </button>
             </div>
           </form>
           {results && (
-            <div className="bg-white shadow-md rounded  mb-4">
-              <h3 className="sm:text-xl font-semibold text-green-500 flex flex-col sm:flex-row items-start sm:items-center px-8 pt-8">
-                <div className="flex items-center">
+            <div className="bg-white/95 backdrop-blur-sm shadow-xl rounded-2xl mb-5 border border-white/40 overflow-hidden">
+              <h3 className="text-lg sm:text-xl font-semibold text-green-600 flex flex-col sm:flex-row items-start sm:items-center gap-2 px-4 sm:px-6 pt-5 sm:pt-6">
+                <div className="flex items-center text-green-700">
                   <FaGasPump className="w-6 mr-2" />
                   <span className="mr-2"> Rs. {results.totalCost}</span>
                 </div>
-                <span className="text-gray-500!">
+                <span className="text-gray-600! text-sm sm:text-base">
                   is needed for {results.fuelRequired} KG of CNG
                   {results.tollCharges && results.tollCharges !== "0" && (
                     <span>, with toll charges</span>
@@ -426,8 +431,8 @@ export default function Home() {
                 </span>
                 {/* {results.join(",")} */}
               </h3>
-              <div className="text-gray-500 text-sm font-semibold bg-blue-50 py-2 rounded px-8 mt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-3 sm:space-y-0">
-                <div className=" ">
+              <div className="text-gray-600 text-sm font-medium bg-blue-50/80 px-4 sm:px-6 py-4 mt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-t border-blue-100">
+                <div>
                   (CNG: ₹{results.cngCost}
                   {results.tollCharges &&
                     results.tollCharges !== "0" &&
@@ -435,18 +440,18 @@ export default function Home() {
                     `, Toll charges: ₹${results.tollCharges}`}
                   )
                 </div>
-                <div className="flex items-center space-x-3 text-xs">
+                <div className="flex items-center gap-2 text-xs w-full sm:w-auto">
                   <a
                     href="https://maps.google.com"
                     target="_blank"
-                    className="border hover:bg-blue-100 rounded px-2 py-1"
+                    className="border border-blue-200 bg-white hover:bg-blue-100 rounded-lg px-2.5 py-1.5"
                   >
                     <FaLocationDot className="w-3 mr-1 inline-flex" /> Maps
                   </a>
                   <a
                     href="https://tollguru.com/toll-calculator-india"
                     target="_blank"
-                    className="border hover:bg-blue-100 rounded px-2 py-1"
+                    className="border border-blue-200 bg-white hover:bg-blue-100 rounded-lg px-2.5 py-1.5"
                   >
                     <FaRoad className="w-3 mr-1 inline-flex" /> Tolls
                   </a>
@@ -460,12 +465,12 @@ export default function Home() {
               ))} */}
             </div>
           )}
-          <div className="flex items-center justify-center space-x-4 text-sm">
+          <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 text-sm pb-2">
             <a
               href="https://github.com/anburocky3/cng-calculator/fork" // Replace with your GitHub URL
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center text-white hover:text-gray-200 justify-center "
+              className="flex items-center text-white hover:text-gray-200 justify-center bg-white/10 px-3 py-1.5 rounded-full border border-white/20"
             >
               <FaGithub className="w-4 h-4 mr-2" /> {/* GitHub icon */}
               Open Source project
@@ -473,7 +478,7 @@ export default function Home() {
             <span className="text-gray-300">|</span>
             <Link
               href="/when-to-gas"
-              className="flex items-center text-white hover:text-gray-200 justify-center "
+              className="flex items-center text-white hover:text-gray-200 justify-center bg-white/10 px-3 py-1.5 rounded-full border border-white/20"
             >
               <FaGasPump className="w-4 h-4 mr-2" />
               When to Gas
